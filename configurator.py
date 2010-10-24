@@ -10,7 +10,10 @@ from jinja2 import meta
 
 class Configurator(object):
     usage =  'Usage: %prog TEMPLATE [CONTEXT_VARIABLES]\n'
-    usage += 'Usage: %prog list'
+    usage += 'Usage: %prog list\n\n'
+    usage += 'This program takes configuration file templates and renders\n'
+    usage += 'them with the supplied arguments as context variables.\n\n'
+    usage += 'Run "%prog list" to show a list of the available templates.'
 
     usage_pretty = usage.replace('%prog', 'configurator.py')
 
