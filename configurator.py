@@ -12,6 +12,7 @@ class Configurator(object):
     usage = 'usage: %prog template [CONTEXT_VARIABLES]'
 
     EXIT_VALUES = {
+        'OK': 0,
         'NO TEMPLATE PROVIDED': 1,
         'TEMPLATE NOT FOUND': 2,
         'CONTEXT VARIABLE NOT PROVIDED': 3,
@@ -33,7 +34,23 @@ class Configurator(object):
             print
             print 'ERROR: you must specify a template'
             sys.exit(self.EXIT_VALUES['NO TEMPLATE PROVIDED'])
+        if args[0] == 'list':
+            self.show_templates()
         return args[0]
+
+    def show_templates(self):
+        for searchpath in self.loader.searchpath:
+            print 'In %s:' % searchpath
+            self.print_path(searchpath, searchpath)
+        sys.exit(self.EXIT_VALUES['OK'])
+
+    def print_path(self, path, base):
+        for item in sorted(os.listdir(path)):
+            item_path = os.path.join(path, item)
+            if os.path.isdir(item_path):
+                self.print_path(item_path, base)
+            else:
+                print item_path[len(base) + 1:]
 
     def get_template_variables(self, template_name):
         try:
