@@ -9,7 +9,10 @@ from jinja2 import meta
 
 
 class Configurator(object):
-    usage = 'usage: %prog template [CONTEXT_VARIABLES]'
+    usage =  'Usage: %prog TEMPLATE [CONTEXT_VARIABLES]\n'
+    usage += 'Usage: %prog list'
+
+    usage_pretty = usage.replace('%prog', 'configurator.py')
 
     EXIT_VALUES = {
         'OK': 0,
@@ -24,19 +27,28 @@ class Configurator(object):
 
     def run(self, args):
         template_name = self.get_template_name(args)
+        self.call_other_commands(template_name)
         context = self.get_template_context(template_name, args)
         output = self.render_template(template_name, context)
         print output
 
+    def call_other_commands(self, cmd):
+        if cmd == 'list':
+            self.show_templates()
+        elif cmd == '--help' or cmd == '-h':
+            self.show_usage()
+
     def get_template_name(self, args):
         if len(args) == 0:
-            print self.usage.replace('%prog', 'configurator.py')
+            print self.usage_pretty
             print
             print 'ERROR: you must specify a template'
             sys.exit(self.EXIT_VALUES['NO TEMPLATE PROVIDED'])
-        if args[0] == 'list':
-            self.show_templates()
         return args[0]
+
+    def show_usage(self):
+        print self.usage_pretty
+        sys.exit(self.EXIT_VALUES['OK'])
 
     def show_templates(self):
         for searchpath in self.loader.searchpath:
@@ -74,7 +86,7 @@ class Configurator(object):
         return options
 
     def raise_error_on_missing_variables(self, variables, context):
-        error = 'ERROR: "%s" is used in the template.\n'
+        error =  'ERROR: "%s" is used in the template.\n'
         error += 'ERROR: please provide a value for it by using "--%s=VALUE"'
         for var in variables:
             if context[var] is None:
