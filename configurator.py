@@ -9,13 +9,15 @@ from jinja2 import meta
 
 
 class Configurator(object):
-    usage =  'Usage: %prog TEMPLATE [CONTEXT_VARIABLES]\n'
-    usage += 'Usage: %prog list\n\n'
-    usage += 'This program takes configuration file templates and renders\n'
-    usage += 'them with the supplied arguments as context variables.\n\n'
-    usage += 'Run "%prog list" to show a list of the available templates.'
+    """
+    Usage: %prog TEMPLATE [CONTEXT_VARIABLES]
+    Usage: %prog list
 
-    usage_pretty = usage.replace('%prog', 'configurator.py')
+    This program takes configuration file templates and renders
+    them with the supplied arguments as context variables.
+
+    Run "%prog list" to show a list of the available templates.
+    """
 
     EXIT_VALUES = {
         'OK': 0,
@@ -25,6 +27,9 @@ class Configurator(object):
     }
 
     def __init__(self, template_dir):
+        self.usage = self.__doc__
+        self.usage_pretty = self.usage.replace('%prog', 'configurator.py')
+
         self.loader = jinja2.FileSystemLoader(template_dir)
         self.env = jinja2.Environment(loader=self.loader, autoescape=False)
 
