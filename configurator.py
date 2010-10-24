@@ -31,7 +31,11 @@ class Configurator(object):
         self.usage_pretty = self.usage.replace('%prog', 'configurator.py')
 
         self.loader = jinja2.FileSystemLoader(template_dir)
-        self.env = jinja2.Environment(loader=self.loader, autoescape=False)
+        self.env = jinja2.Environment(
+            loader=self.loader,
+            autoescape=False,
+            trim_blocks=True
+            )
 
     def run(self, args):
         template_name = self.get_template_name(args)
